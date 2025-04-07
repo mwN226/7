@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linkforce JHA Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #002d56;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+      color: #002d56;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+    select, textarea, input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    select[multiple] {
+      height: 100px;
+    }
+    button {
+      background-color: #0055a4;
+      color: white;
+      padding: 12px 20px;
+      margin-top: 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #003f7d;
+    }
+    #output {
+      margin-top: 30px;
+      padding: 20px;
+      background: #eef3f9;
+      border: 1px solid #aac;
+      border-radius: 6px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Linkforce JHA Generator</h1>
+</header>
+
+<main>
+  <h2>Create Your JHA</h2>
+
+  <label for="task">Task:</label>
+  <input type="text" id="task" placeholder="e.g. Working at height" />
+
+  <label for="tools">Tools:</label>
+  <input type="text" id="tools" placeholder="e.g. Ladder, Harness" />
+
+  <label for="hazards">Hazards (select one or more):</label>
+  <select id="hazards" multiple>
+    <option value="Slips">Slips</option>
+    <option value="Trips">Trips</option>
+    <option value="Falls">Falls</option>
+    <option value="Pinch Points">Pinch Points</option>
+    <option value="Manual Handling">Manual Handling</option>
+    <option value="Line of Fire">Line of Fire</option>
+    <option value="Isolation Error">Isolation Error</option>
+  </select>
+
+  <label for="controls">Controls (select one or more):</label>
+  <select id="controls" multiple>
+    <option value="Use PPE">Use PPE</option>
+    <option value="Use fall protection">Use fall protection</option>
+    <option value="Spotter present">Spotter present</option>
+    <option value="Follow permit">Follow permit</option>
+    <option value="Ask questions if unsure">Ask questions if unsure</option>
+    <option value="Verify asset ID">Verify asset ID</option>
+    <option value="Lift with legs">Lift with legs</option>
+  </select>
+
+  <label for="comments">Comments / Notes:</label>
+  <textarea id="comments" rows="3" placeholder="Add any special precautions or observations..."></textarea>
+
+  <button id="generateBtn" type="button">Generate JHA</button>
+
+  <div id="output">Your JHA will appear here...</div>
+</main>
+
+<script>
+  function generateJHA() {
+    const task = document.getElementById("task").value.trim();
+    const tools = document.getElementById("tools").value.trim();
+    const hazards = Array.from(document.getElementById("hazards").selectedOptions).map(opt => opt.value);
+    const controls = Array.from(document.getElementById("controls").selectedOptions).map(opt => opt.value);
+    const comments = document.getElementById("comments").value.trim();
+
+    let output = `Task: ${task}
+Tools: ${tools}
+`;
+
+    if (hazards.length > 0) {
+      output += "
+Risk/Hazard Description:
+";
+      hazards.forEach(hz => {
+        output += `- We are exposed to ${hz.toLowerCase()} which could lead to injury or equipment damage.
+`;
+      });
+    }
+
+    if (controls.length > 0) {
+      output += "
+Controls in Place:
+";
+      controls.forEach(ctrl => {
+        output += `- ${ctrl}
+`;
+      });
+    }
+
+    if (comments) {
+      output += `
+Comments:
+${comments}`;
+    }
+
+    document.getElementById("output").textContent = output.trim();
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("generateBtn").addEventListener("click", generateJHA);
+  });
+</script>
+
+</body>
+</html>
